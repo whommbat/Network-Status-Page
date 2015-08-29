@@ -1,0 +1,75 @@
+html
+    head
+        title Network Status Page
+        
+        meta(charset="utf-8")
+        meta(name="author", content="d4rk")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        
+        meta(name="apple-mobile-web-app-title", content="d4rk")
+        meta(name="apple-mobile-web-app-capable", content="yes")
+        meta(name="apple-mobile-web-app-status-bar-style", content="black")
+        
+        link(href="/fonts/stylesheet.css", rel="stylesheet")
+        link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-wip/css/bootstrap.min.css", rel="stylesheet")
+        link(href="//netdna.bootstrapcdn.com/font-awesome/3.2.0/css/font-awesome.css", rel="stylesheet")
+        link(href="/css/style.css", rel="stylesheet")
+        
+        link(href="/assets/ico/apple-touch-icon.png", rel="apple-touch-icon-precomposed")
+        link(href="assets/ico/favicon.ico", rel="shortcut icon")
+    body
+        .container
+            .row
+                .col-md-12
+                    .row
+                        .col-md-3(style="padding-top:20px")
+                            .panel.panel-default
+                                .panel-heading
+                                    h4.panel-title.exoextralight Weather
+                                .panel-body
+                                    #left_column_top
+                            .panel.panel-default
+                                .panel-heading
+                                    h4.panel-title.exoextralight Bandwidth
+                                .panel-body
+                                    #bandwidth
+                            .panel.panel-default
+                                .panel-heading
+                                    h4.panel-title.exoextralight Servies
+                                #services.panel-body
+                        .col-md-6
+                            #now_playing_title
+                            #now_playing(style="overflow: auto;")
+                            hr.visible-xs.visible-sm
+                        .col-md-3(style="padding-top: 20px;")
+                            .panel.panel-default
+                                .panel-heading
+                                    #transcodeSessions
+                                    .panel-body
+                                        #system_load(style="margin-bottom: -10px;")
+                            .panel.panel-default
+                                .panel-heading
+                                    h4.panel-title.exoextralight Storage
+                                .panel-body
+                                    #disk_space(stype="margin-bottom: -10px;")
+        #contactModal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        button.close(type="button", data-dismiss="modal", aria-hidden="true") ×
+                        h3@myModalLabel Contact info
+                    .modal-body
+                        p You can contact me at the following address: 
+                        img(src="/img/contact.png", style="width: 150px;")
+                    .modal-footer
+                        button.btn(data-dismiss="modal", aria-hidden="true") Close
+        #plex_check
+
+        script(src="//code.jquery.com/jquery.js")
+        script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-wip/js/bootstrap.min.js")
+        script.
+            // Enable bootstrap tooltips
+            $(function () { 
+                $("[rel=tooltip]").tooltip();
+                $("[rel=popover]").popover();
+            });
