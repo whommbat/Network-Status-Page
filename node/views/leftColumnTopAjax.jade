@@ -1,87 +1,35 @@
 if(weatherAlwaysDisplay || clientIp == '10.0.1.1')
-    //- function makeWeatherSidebar()
-    //- {
-    //-     global $forecast_api;
-    //-     global $weather_lat;
-    //-     global $weather_long;
-    //-     $forecastExcludes = '?exclude=flags'; // Take a look at https://developer.forecast.io/docs/v2 to configure your weather information.
-    //-     $currentForecast = json_decode(file_get_contents('https://api.forecast.io/forecast/'.$forecast_api.'/'.$weather_lat.','.$weather_long.$forecastExcludes));
-    //- 
-    //-     $currentSummary = $currentForecast->currently->summary;
-    //-     $currentSummaryIcon = $currentForecast->currently->icon;
-    //-     $currentTemp = round($currentForecast->currently->temperature);
-    //-     $currentWindSpeed = round($currentForecast->currently->windSpeed);
-    //-     if ($currentWindSpeed > 0) {
-    //-         $currentWindBearing = $currentForecast->currently->windBearing;
-    //-     }
-    //-     $minutelySummary = $currentForecast->minutely->summary;
-    //-     $hourlySummary = $currentForecast->hourly->summary;
-    //- 
-    //-     $sunriseTime = $currentForecast->daily->data[0]->sunriseTime;
-    //-     $sunsetTime = $currentForecast->daily->data[0]->sunsetTime;
-    //- 
-    //-     if ($sunriseTime > time()) {
-    //-         $rises = 'Rises';
-    //-     } else {
-    //-         $rises = 'Rose';
-    //-     }
-    //- 
-    //-     if ($sunsetTime > time()) {
-    //-         $sets = 'Sets';
-    //-     } else {
-    //-         $sets = 'Set';
-    //-     }
-    //- 
-    //-     // If there are alerts, make the alerts variables
-    //-     if (isset($currentForecast->alerts)) {
-    //-         $alertTitle = $currentForecast->alerts[0]->title;
-    //-         $alertExpires = $currentForecast->alerts[0]->expires;
-    //-         $alertDescription = $currentForecast->alerts[0]->description;
-    //-         $alertUri = $currentForecast->alerts[0]->uri;
-    //-     }
-    //-     // Make the array for weather icons
-    //-     $weatherIcons = [
-    //-         'clear-day' => 'B',
-    //-         'clear-night' => 'C',
-    //-         'rain' => 'R',
-    //-         'snow' => 'W',
-    //-         'sleet' => 'X',
-    //-         'wind' => 'F',
-    //-         'fog' => 'L',
-    //-         'cloudy' => 'N',
-    //-         'partly-cloudy-day' => 'H',
-    //-         'partly-cloudy-night' => 'I',
-    //-     ];
-    //-     $weatherIcon = $weatherIcons[$currentSummaryIcon];
-    //-     // If there is a severe weather warning, display it
-    //-     //if (isset($currentForecast->alerts)) {
-    //-     //	echo '<div class="alert alert-warning alert-dismissable">';
-    //-     //	echo '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
-    //-     //	echo '<strong><a href="'.$alertUri.'" class="alert-link">'.$alertTitle.'</a></strong>';
-    //-     //	echo '</div>';
-    //-     //}
-    //-     echo '<ul class="list-inline" style="margin-bottom:-20px">';
-    //-     echo '<li><h1 data-icon="'.$weatherIcon.'" style="font-size:500%;margin:0px -10px 20px -5px"></h1></li>';
-    //-     echo '<li><ul class="list-unstyled">';
-    //-     echo '<li><h1 class="exoregular" style="margin:0px">'.$currentTemp.'°</h1></li>';
-    //-     echo '<li><h4 class="exoregular" style="margin:0px;padding-right:10px;width:80px">'.$currentSummary.'</h4></li>';
-    //-     echo '</ul></li>';
-    //-     echo '</ul>';
-    //-     if ($currentWindSpeed > 0) {
-    //-         $direction = getDir($currentWindBearing);
-    //-         echo '<h4 class="exoextralight" style="margin-top:0px">Wind: '.$currentWindSpeed.' mph from the '.$direction.'</h4>';
-    //-     } else {
-    //-         echo '<h4 class="exoextralight" style="margin-top:0px">Wind: Calm</h4>';
-    //-     }
-    //-     echo '<h4 class="exoregular">Next Hour</h4>';
-    //-     echo '<h5 class="exoextralight" style="margin-top:10px">'.$minutelySummary.'</h5>';
-    //-     echo '<h4 class="exoregular">Next 24 Hours</h4>';
-    //-     echo '<h5 class="exoextralight" style="margin-top:10px">'.$hourlySummary.'</h5>';
-    //-     echo '<h4 class="exoregular">The Sun</h4>';
-    //-     echo '<h5 class="exoextralight" style="margin-top:10px">'.$rises.' at '.date('g:i A', $sunriseTime).'</h5>';
-    //-     echo '<h5 class="exoextralight" style="margin-top:10px">'.$sets.' at '.date('g:i A', $sunsetTime).'</h5>';
-    //-     echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="http://forecast.io/#/f/'.$weather_lat.','.$weather_long.'">Forecast.io</a></small></p> ';
-    //- }
+    ul.list-inline(style="margin-bottom: -20px;")
+        li
+            h1(data-icon=weatherIcon, style="font-size: 500%; margin: 0px -10px 20px -5px;")
+        li
+            ul.list-unstyled
+                li
+                    h1.exoregular(style="margin: 0px;") #{currentTemp}°
+                li
+                    h4.exoregular(style="margin: 0px; padding-right: 10px; width: 80px;") #{currentSummary}
+            if(currentWindSpeed > 0)
+                h4.exoextralight(style="margin-top: 0px;") Wind: #{currentWindSpeed} mph from the #{direction}
+            else
+                h4.exoextralight(style="margin-top: 0px;") Wind: Calm
+            //- h4.exoregular Next Hour
+            //- h5.exoextralight(style="margin-top: 10px;") #{minutelySummary}
+            h4.exoregular Next 24 Hours
+            h5.exoextralight(style="margin-top: 10px;") #{hourlySummary}
+            h4.exoregular The Sun
+            //- h5.exoextralight(style="margin-top: 10px;") #{rises} at #{date('g:i A', $sunriseTime)}
+            //- h5.exoextralight(style="margin-top: 10px;") #{sets} at #{date('g:i A', $sunsetTime)}
+            p.text-right.no-link-color(style="margin-bottom: -10px;")
+                small
+                    a(href="http://forecast.io/#/f/" + weatherLatitude + "," + weatherLongitude) Forecast.io
+            //-     $weatherIcon = $weatherIcons[$currentSummaryIcon];
+            //-     // If there is a severe weather warning, display it
+            //-     //if (isset($currentForecast->alerts)) {
+            //-     //	echo '<div class="alert alert-warning alert-dismissable">';
+            //-     //	echo '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+            //-     //	echo '<strong><a href="'.$alertUri.'" class="alert-link">'.$alertTitle.'</a></strong>';
+            //-     //	echo '</div>';
+            //-     //};
 else
     ul.nav.nav-pills.nav-stacked
         li.exoextralight Online profiles

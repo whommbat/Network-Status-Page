@@ -7,6 +7,7 @@ var express = require('express'),
     portscanner = require('portscanner'),
     os = require('os'),
     cpu = require('windows-cpu'),
+    async = require('async'),
     config = require('../config/config.js');
 
 module.exports = (function() {
@@ -71,7 +72,44 @@ module.exports = (function() {
     });
 
     app.get('/assets/php/left_column_top_ajax.php', function(req, res){
-        res.render('leftColumnTopAjax');
+        request('https://api.forecast.io/forecast/' + config.forecastApiKey + '/' + config.weatherLatitude + ',' + config.weatherLongitude + '?exclude=flags', function (error, response, currentForecast) {
+            if (!error && response.statusCode == 200) {
+                currentForecast = JSON.parse(currentForecast);
+                var weatherIcons = {
+                    'clear-day': 'B',
+                    'clear-night': 'C',
+                    'rain': 'R',
+                    'snow': 'W',
+                    'sleet': 'X',
+                    'wind': 'F',
+                    'fog': 'L',
+                    'cloudy': 'N',
+                    'partly-cloudy-day': 'H',
+                    'partly-cloudy-night': 'I',
+                }
+                // res.send({
+                //     one: currentForecast.currently.summary,
+                //     two: currentForecast.currently['summary']
+                // });
+                //
+                res.render('leftColumnTopAjax', {
+                // res.send({
+                    currentSummary: currentForecast.currently.summary,
+                    currentSummaryIcon: currentForecast.currently.icon,
+                    currentTemp: Math.round(currentForecast.currently.temperature),
+                    currentWindSpeed: Math.round(currentForecast.currently.windSpeed),
+                    currentWindBearing: (Math.round(currentForecast.currently.windSpeed)) > 0 ? currentForecast.currently.windBearing : '',
+                    minutelySummary: currentForecast.minutely ? currentForecast.minutely['summary'] : '',
+                    hourlySummary: currentForecast.hourly['summary'],
+                    sunriseTime: currentForecast.daily.data[0].sunriseTime * 1000,
+                    sunsetTime: currentForecast.daily.data[0].sunsetTime * 1000,
+                    rises: (currentForecast.daily.data[0].sunriseTime * 1000) > new Date().getTime() ? 'Rises' : 'Rose',
+                    sets: (currentForecast.daily.data[0].sunsetTime * 1000) > new Date().getTime() ? 'Sets' : 'Set',
+                    alerts: currentForecast.alerts,
+                    weatherIcon: weatherIcons[currentForecast.currently.icon]
+                });
+            }
+        });
     });
 
     app.get('/assets/php/bandwidth_ajax.php', function(req, res){
@@ -115,14 +153,16 @@ module.exports = (function() {
     });
 
     app.get('/assets/php/services_ajax.php', function(req, res){
-        config.services.forEach(function(service){
+        async.eachSeries(config.services, function i(service, callback) {
             portscanner.checkPortStatus(service.port, service.url, function(error, status) {
                 if(error) console.log(error);
                 config.services[config.services.indexOf(service)].status = (status == 'open' ? true : false);
+                callback();
             });
-        });
-        res.render('servicesAjax', {
-            services: config.services
+        }, function done() {
+            res.render('servicesAjax', {
+                services: config.services
+            });
         });
     });
 
