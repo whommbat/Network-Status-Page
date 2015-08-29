@@ -18,6 +18,8 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(function(req, res, next){
     res.locals.traktUsername = config.traktUsername;
+    res.locals.clientIp = '192.168.1.1'; // Change this to actually get the connecting ip
+    res.locals.weatherAlwaysDisplay = config.weatherAlwaysDisplay;
     next();
 });
 

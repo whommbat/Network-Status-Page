@@ -2,6 +2,9 @@ var express = require('express'),
     parser = require('xml2json'),
     request = require('request'),
     _ = require('underscore'),
+    diskUsage = require('diskusage'),
+    pretty = require('prettysize'),
+    portscanner = require('portscanner'),
     config = require('../config/config.js');
 
 module.exports = (function() {
@@ -62,6 +65,62 @@ module.exports = (function() {
             } else {
                 res.render('nowPlayingAjaxTrakt');
             }
+        });
+    });
+
+    app.get('/assets/php/left_column_top_ajax.php', function(req, res){
+        res.render('leftColumnTopAjax');
+    });
+
+    app.get('/assets/php/bandwidth_ajax.php', function(req, res){
+        res.render('bandwidthAjax');
+    });
+
+    app.get('/assets/php/disk_space_ajax.php', function(req, res){
+        var disks = [];
+        var totalDiskSpace = 0;
+        var totalFree = 0;
+        config.disks.forEach(function(disk){
+            diskUsage.check(disk.mountPoint, function(err, info) {
+                totalDiskSpace = totalDiskSpace+info.total;
+                totalFree = totalFree+info.free;
+                disks.push({
+                    mountPoint: disk.mountPoint,
+                    name: disk.name,
+                    free: {
+                        pretty: pretty(info.free),
+                        raw: info.free
+                    },
+                    total: {
+                        pretty: pretty(info.total),
+                        raw: info.total
+                    }
+                });
+            });
+        });
+        // res.send({
+        res.render('diskspaceAjax', {
+            totalDiskSpace: {
+                pretty: pretty(totalDiskSpace),
+                raw: totalDiskSpace
+            },
+            totalFree: {
+                pretty: pretty(totalFree),
+                raw: totalFree
+            },
+            disks: disks
+        });
+    });
+
+    app.get('/assets/php/services_ajax.php', function(req, res){
+        config.services.forEach(function(service){
+            portscanner.checkPortStatus(service.port, service.url, function(error, status) {
+                if(error) console.log(error);
+                config.services[config.services.indexOf(service)].status = (status == 'open' ? true : false);
+            });
+        });
+        res.render('servicesAjax', {
+            services: config.services
         });
     });
 

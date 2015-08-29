@@ -1,0 +1,16 @@
+script.
+    // Enable bootstrap tooltips
+    $(function () {
+        $("[rel=tooltip]").tooltip();
+    });
+
+.exolight
+    | Total Capacity: #{totalDiskSpace.pretty}
+    .progress(rel="tooltip", data-toggle="tooltip", data-placement="bottom", title=totalFree.pretty + " free out of " + totalDiskSpace.pretty)
+        - var percentage = (totalFree.raw / totalDiskSpace.raw * 100).toFixed(2);
+        .progress-bar(class=(percentage >= 95 && percentage < 99 ? 'progress-bar-warning' : percentage > 99 ? 'progress-bar-danger' : ''), style="width: " + percentage + "%")
+    for disk in disks
+        | #{disk.name}: #{disk.pretty}
+        .progress(rel="tooltip", data-toggle="tooltip", data-placement="bottom", title=disk.free.pretty + " free out of " + disk.total.pretty)
+            - var percentage = (disk.free.raw / disk.total.raw * 100).toFixed(2);
+            .progress-bar(class=(percentage >= 95 && percentage < 99 ? 'progress-bar-warning' : percentage > 99 ? 'progress-bar-danger' : ''), style="width: " + percentage + "%")
