@@ -6,15 +6,15 @@
         // var $plex_check_refresh = $('#plex_check');
         // var $bandwidth_refresh = $('#bandwidth');
         // var $ping_refresh = $('#ping');
-        // var $system_load_refresh = $('#system_load');
         // var $transcodeSessions = $('#transcodeSessions');
 
         // Load external php files & assign variables
         // $plex_check_refresh.load("assets/php/plex_check_ajax.php");
         // $bandwidth_refresh.load("assets/php/bandwidth_ajax.php");
         // $ping_refresh.load("assets/php/ping_ajax.php");
-        // $system_load_refresh.load("assets/php/system_load_ajax.php");
         // $transcodeSessions.load("assets/php/transcode_sessions_ajax.php");
+
+        $('#system_load').load("assets/php/system_load_ajax.php");
         $('#services').load("assets/php/services_ajax.php");
         $('#now_playing_title').load("assets/php/now_playing_title_ajax.php");
         $('#now_playing').load("assets/php/now_playing_ajax.php");
@@ -40,11 +40,11 @@
         // }, 60000); // 60 seconds
 
         var refreshIdslow = setInterval(function(){
-            $disk_space_refresh.load("assets/php/disk_space_ajax.php");
+            $('#disk_space').load("assets/php/disk_space_ajax.php");
         }, 120000); // 2 minutes
 
         var refreshtopleft = setInterval(function(){
-            $left_column_top_refresh.load("assets/php/left_column_top_ajax.php");
+            $('#left_column_top').load("assets/php/left_column_top_ajax.php");
         }, 300000); // 5 minutes
 
         // // Load these sections only if Plex has changed states

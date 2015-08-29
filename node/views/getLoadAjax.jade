@@ -1,0 +1,35 @@
+//- function makeLoadBars(){
+//- 	printBar(getLoad(0), "1 min");
+//- 	printBar(getLoad(1), "5 min");
+//- 	printBar(getLoad(2), "15 min");
+//- }
+
+//- 
+//- function getLoad($id){
+//- 	global $cpu_cores;
+//- 	return 100 * ($GLOBALS['loads'][$id] / $cpu_cores);
+//- }
+//- 
+//- // Calculate server load
+//- if (strpos(strtolower(PHP_OS), "Darwin") === false)
+//- 	$loads = sys_getloadavg();
+//- else
+//- 	$loads = Array(0.55,0.7,1);
+
+//- function printBar($value, $name = ""){
+//- 	if ($name != "") echo '<!-- ' . $name . ' -->';
+//- 	echo '<div class="exolight">';
+//- 		if ($name != "")
+//- 			echo $name . ": ";
+//- 			echo number_format($value, 0) . "%";
+//- 		echo '<div class="progress">';
+//- 			echo '<div class="progress-bar" style="width: ' . $value . '%"></div>';
+//- 		echo '</div>';
+//- 	echo '</div>';
+//- }
+
+each average in averages
+    .exolight
+        | #{average.title}: #{average.percentage}%
+        .progress
+            .progress-bar(style="width: " + average.percentage + "%")

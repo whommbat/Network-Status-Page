@@ -5,6 +5,8 @@ var express = require('express'),
     diskUsage = require('diskusage'),
     pretty = require('prettysize'),
     portscanner = require('portscanner'),
+    os = require('os'),
+    cpu = require('windows-cpu'),
     config = require('../config/config.js');
 
 module.exports = (function() {
@@ -121,6 +123,22 @@ module.exports = (function() {
         });
         res.render('servicesAjax', {
             services: config.services
+        });
+    });
+
+    app.get('/assets/php/system_load_ajax.php', function(req, res){
+        var averages = process.platform === 'win32' ? [0, 0, 0] : os.loadavg();
+        res.render('getLoadAjax', {
+            averages: [{
+                title: '1 min',
+                percentage: averages[0].toFixed(0)
+            },{
+                title: '5 min',
+                percentage: averages[1].toFixed(0)
+            },{
+                title: '15 min',
+                percentage: averages[2].toFixed(0)
+            }]
         });
     });
 
