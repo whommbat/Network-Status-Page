@@ -1,7 +1,8 @@
 var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    methodOverride = require('method-override');
+    methodOverride = require('method-override'),
+    config = require('./config/config.js');
 
 var app = express();
 
@@ -14,6 +15,11 @@ app.use(methodOverride());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.static(__dirname + '/public'));
+
+app.use(function(req, res, next){
+    res.locals.traktUsername = config.traktUsername;
+    next();
+});
 
 // Views
 app.use('/', require('./routes/web'));

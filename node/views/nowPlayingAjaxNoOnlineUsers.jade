@@ -1,0 +1,36 @@
+.col-md-10.col-sm-offset-1
+    each video, i in sessions['Video']
+        .thumbnail
+            if(video.type == 'movie')
+                img(src="/plex/img?url=" + video.art, alt=video.title)
+                .progress.now-playing-progress-bar
+                    - var progress = (video.viewOffset / video.duration * 100).toFixed(2);
+                    .progress-bar.progress-bar-warning(role="progressbar", aria-valuenow=progress, aria-valuemin="0", aria-valuemax="100", style="width: " + progress + "%")
+                .caption
+                    - var summary = video.summary.length > 51 ? video.summary.substring(0, 50) + '...' : video.summary;
+                    p.exolight(style="margin-top: 5px;") #{summary}
+                    span.glyphicon(class='glyphicon-' + (video['Player'].state == 'play' ? 'play' : 'pause'))
+                    p.exolight #{Object.keys(video['User']).length ? video['User'].title : video['Device'].title}
+            else
+                img(src="/plex/img?url=" + video.grandparentThumb, alt=video.grandparentTitle)
+                .progress.now-playing-progress-bar
+                    - var progress = (video.viewOffset / video.duration * 100).toFixed(2);
+                    .progress-bar.progress-bar-warning(role="progressbar", aria-valuenow=progress, aria-valuemin="0", aria-valuemax="100", style="width: " + progress + "%")
+                .caption
+                    - var summary = video.summary.length > 51 ? video.summary.substring(0, 50) + '...' : video.summary;
+                    h3.exoextralight(style="margin-top: 5px;") Season #{video.parentIndex}
+                    h4.exoextralight(style="margin-top: 5px;") E #{video.index}  - #{video.title}
+                    p.exolight #{summary}
+                    span.glyphicon(class='glyphicon-' + (video['Player'].state == 'play' ? 'play' : 'pause'))
+                    p.exolight #{Object.keys(video['User']).length ? video['User'].title : video['Device'].title}
+        if(sessions['Video'].length>1 && i<sessions['Video'].length)
+            hr
+            
+script.
+    // Enable bootstrap tooltips
+    $(function (){
+        $("[rel=tooltip]").tooltip();
+    });
+    $('.carousel').carousel({
+        interval: 30000
+    });

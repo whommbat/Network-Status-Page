@@ -4,9 +4,18 @@
             .thumbnail
                 .carousel-inner
                     .item.active
-                        img(src="/plex/img?url=" + movies[0].art)
+                        img(src="/plex/img?url=" + movies[0].art, alt=movies[0].title)
                     for movie in movies
                         .item
                             img(src="/plex/img?url=" + movie.art, alt=movie.title)
                     a.left.carousel-control(href="#carousel-example-generic", data-slide="prev")
                     a.right.carousel-control(href="#carousel-example-generic", data-slide="next")
+    
+script.
+    // Enable bootstrap tooltips
+    $(function (){
+        $("[rel=tooltip]").tooltip();
+    });
+    $('.carousel').carousel({
+        interval: 30000
+    });
