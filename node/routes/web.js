@@ -8,6 +8,7 @@ var express = require('express'),
     os = require('os'),
     cpu = require('windows-cpu'),
     async = require('async'),
+    dateFormat = require('dateformat'),
     config = require('../config/config.js');
 
 module.exports = (function() {
@@ -72,7 +73,7 @@ module.exports = (function() {
     });
 
     app.get('/assets/php/left_column_top_ajax.php', function(req, res){
-        request('https://api.forecast.io/forecast/' + config.forecastApiKey + '/' + config.weatherLatitude + ',' + config.weatherLongitude + '?exclude=flags', function (error, response, currentForecast) {
+        request('https://api.forecast.io/forecast/' + config.forecastApiKey + '/' + config.weatherLatitude + ',' + config.weatherLongitude + '?exclude=flags&units=auto', function (error, response, currentForecast) {
             if (!error && response.statusCode == 200) {
                 currentForecast = JSON.parse(currentForecast);
                 var weatherIcons = {
@@ -87,18 +88,17 @@ module.exports = (function() {
                     'partly-cloudy-day': 'H',
                     'partly-cloudy-night': 'I',
                 }
-                // res.send({
-                //     one: currentForecast.currently.summary,
-                //     two: currentForecast.currently['summary']
-                // });
-                //
+                function getDirection(degrees){
+                    directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N'];
+                    return directions[Math.round(degrees/45)];
+                }
                 res.render('leftColumnTopAjax', {
-                // res.send({
                     currentSummary: currentForecast.currently.summary,
                     currentSummaryIcon: currentForecast.currently.icon,
                     currentTemp: Math.round(currentForecast.currently.temperature),
                     currentWindSpeed: Math.round(currentForecast.currently.windSpeed),
                     currentWindBearing: (Math.round(currentForecast.currently.windSpeed)) > 0 ? currentForecast.currently.windBearing : '',
+                    currentWindDirection: getDirection(currentForecast.currently.windBearing),
                     minutelySummary: currentForecast.minutely ? currentForecast.minutely['summary'] : '',
                     hourlySummary: currentForecast.hourly['summary'],
                     sunriseTime: currentForecast.daily.data[0].sunriseTime * 1000,
@@ -106,7 +106,10 @@ module.exports = (function() {
                     rises: (currentForecast.daily.data[0].sunriseTime * 1000) > new Date().getTime() ? 'Rises' : 'Rose',
                     sets: (currentForecast.daily.data[0].sunsetTime * 1000) > new Date().getTime() ? 'Sets' : 'Set',
                     alerts: currentForecast.alerts,
-                    weatherIcon: weatherIcons[currentForecast.currently.icon]
+                    weatherIcon: weatherIcons[currentForecast.currently.icon],
+                    weatherLatitude: config.weatherLatitude,
+                    weatherLongitude: config.weatherLongitude,
+                    dateFormat: dateFormat
                 });
             }
         });

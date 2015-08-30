@@ -5,31 +5,32 @@ if(weatherAlwaysDisplay || clientIp == '10.0.1.1')
         li
             ul.list-unstyled
                 li
-                    h1.exoregular(style="margin: 0px;") #{currentTemp}°
+                    h1.exoregular(style="margin: 0px;") #{currentTemp}&deg;
                 li
                     h4.exoregular(style="margin: 0px; padding-right: 10px; width: 80px;") #{currentSummary}
-            if(currentWindSpeed > 0)
-                h4.exoextralight(style="margin-top: 0px;") Wind: #{currentWindSpeed} mph from the #{direction}
-            else
-                h4.exoextralight(style="margin-top: 0px;") Wind: Calm
-            //- h4.exoregular Next Hour
-            //- h5.exoextralight(style="margin-top: 10px;") #{minutelySummary}
-            h4.exoregular Next 24 Hours
-            h5.exoextralight(style="margin-top: 10px;") #{hourlySummary}
-            h4.exoregular The Sun
-            //- h5.exoextralight(style="margin-top: 10px;") #{rises} at #{date('g:i A', $sunriseTime)}
-            //- h5.exoextralight(style="margin-top: 10px;") #{sets} at #{date('g:i A', $sunsetTime)}
-            p.text-right.no-link-color(style="margin-bottom: -10px;")
-                small
-                    a(href="http://forecast.io/#/f/" + weatherLatitude + "," + weatherLongitude) Forecast.io
-            //-     $weatherIcon = $weatherIcons[$currentSummaryIcon];
-            //-     // If there is a severe weather warning, display it
-            //-     //if (isset($currentForecast->alerts)) {
-            //-     //	echo '<div class="alert alert-warning alert-dismissable">';
-            //-     //	echo '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
-            //-     //	echo '<strong><a href="'.$alertUri.'" class="alert-link">'.$alertTitle.'</a></strong>';
-            //-     //	echo '</div>';
-            //-     //};
+    if(currentWindSpeed > 0)
+        h4.exoextralight(style="margin-top: 0px;") Wind: #{currentWindSpeed} mph from the #{currentWindDirection}
+    else
+        h4.exoextralight(style="margin-top: 0px;") Wind: Calm
+    if(minutelySummary != '')
+        h4.exoregular Next Hour
+        h5.exoextralight(style="margin-top: 10px;") #{minutelySummary}
+    h4.exoregular Next 24 Hours
+    h5.exoextralight(style="margin-top: 10px;") #{hourlySummary}
+    h4.exoregular The Sun
+    h5.exoextralight(style="margin-top: 10px;") #{rises} at #{dateFormat(sunriseTime, "HH:MM TT")}
+    h5.exoextralight(style="margin-top: 10px;") #{sets} at #{dateFormat(sunsetTime, "HH:MM TT")}
+    p.text-right.no-link-color(style="margin-bottom: -10px;")
+        small
+            a(href="http://forecast.io/#/f/" + weatherLatitude + "," + weatherLongitude) Forecast.io
+    //-     $weatherIcon = $weatherIcons[$currentSummaryIcon];
+    //-     // If there is a severe weather warning, display it
+    //-     //if (isset($currentForecast->alerts)) {
+    //-     //	echo '<div class="alert alert-warning alert-dismissable">';
+    //-     //	echo '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+    //-     //	echo '<strong><a href="'.$alertUri.'" class="alert-link">'.$alertTitle.'</a></strong>';
+    //-     //	echo '</div>';
+    //-     //};
 else
     ul.nav.nav-pills.nav-stacked
         li.exoextralight Online profiles
