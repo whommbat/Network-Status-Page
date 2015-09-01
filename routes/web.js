@@ -62,8 +62,9 @@ module.exports = (function() {
                         }
                     });
                 } else {
+                    var videos = sessions.size == 1 ? [sessions.Video] : sessions.Video;
                     res.render('nowPlayingAjaxNoOnlineUsers', {
-                        sessions: sessions
+                        videos: videos
                     });
                 }
             } else {

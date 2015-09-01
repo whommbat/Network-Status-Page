@@ -1,5 +1,5 @@
 .col-md-10.col-sm-offset-1
-    each video, i in sessions['Video']
+    each video, i in videos
         .thumbnail
             if(video.type == 'movie')
                 img(src="/plex/img?url=" + video.art, alt=video.title)
@@ -23,7 +23,7 @@
                     p.exolight #{summary}
                     span.glyphicon(class='glyphicon-' + (video['Player'].state == 'play' ? 'play' : 'pause'))
                     p.exolight #{Object.keys(video['User']).length ? video['User'].title : video['Device'].title}
-        if(sessions['Video'].length>1 && i<sessions['Video'].length)
+        if(videos.length>1 && i<videos.length)
             hr
             
 script.
