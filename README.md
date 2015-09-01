@@ -3,7 +3,7 @@ Network Status Page - 0.2.0
 
 Designed to monitor a local server and network with forecast.io, Plex, and pfSense integration.
 
-[Live site][ls]
+~~[Live site][ls]~~ (This is the old live site)
 
 [Plex forum thread][pft]
 
@@ -47,10 +47,9 @@ Designed to monitor a local server and network with forecast.io, Plex, and pfSen
 ---------------
 * [Plex Media Server][pms] (v0.9.8+) and a [myPlex][pp] account `These are both free.`
 * The weather sidebar requires a [forecast.io API key][fcAPI] `Free up to 1000 calls/day.`
-* Web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
-* PHP 5.4
+* Nodejs or iojs `Tested on the lastest iojs`
 
-**Note:** While this project is written with OS X in mind, it can very easily be adapted to run on linux or windows by rewriting the functions that don't work on those platforms.
+**Note:** While this project is tested against OSX and Ubuntu it should still work with most OSs including Windows.
 
 [pms]: https://plex.tv
 [pp]: https://plex.tv/subscription/about
