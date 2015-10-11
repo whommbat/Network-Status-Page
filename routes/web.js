@@ -26,8 +26,8 @@ module.exports = (function() {
         request('http://' + config.plex.url + ':' + config.plex.port + '/status/sessions?X-Plex-Token=' + config.plex.token, function (error, response, body) {
             // See if Plex Media Server is online and how many people are watching.
             if (!error && response.statusCode == 200) {
-                var json = JSON.parse(parser.toJson(body))['MediaContainer'];
-            		if(json['size'] == 0){
+                var json = JSON.parse(parser.toJson(body)).MediaContainer;
+                    if(json['size'] == 0){ // jshint ignore:line
                         title = 'Recently Released';
                     } else {
                         title = 'Now Playing';
@@ -36,24 +36,24 @@ module.exports = (function() {
                 title = 'Recently Viewed';
             }
             res.send('<h1 class="exoextralight">' + title + '</h1><hr>');
-        })
+        });
     });
 
     app.get('/assets/php/now_playing_ajax.php', function(req, res){
         request('http://' + config.plex.url + ':' + config.plex.port + '/status/sessions?X-Plex-Token=' + config.plex.token, function (error, response, body) {
             // See if Plex Media Server is online and how many people are watching.
             if (!error && response.statusCode == 200) {
-                var sessions = JSON.parse(parser.toJson(body))['MediaContainer'];
-                if(sessions['size'] == 0){
+                var sessions = JSON.parse(parser.toJson(body)).MediaContainer;
+                if(sessions['size'] == 0){ // jshint ignore:line
                     request('http://' + config.plex.url + ':' + config.plex.port + '/library/sections?X-Plex-Token=' + config.plex.token, function (error, response, body) {
                         // See if Plex Media Server is online and how many people are watching.
                         if (!error && response.statusCode == 200) {
-                            var libraries = JSON.parse(parser.toJson(body))['MediaContainer'];
-                            var libraryId = _.findWhere(libraries['Directory'], {type: 'movie'})['Location']['id'];
+                            var libraries = JSON.parse(parser.toJson(body)).MediaContainer;
+                            var libraryId = _.findWhere(libraries.Directory, {type: 'movie'}).Location.id;
                             request('http://' + config.plex.url + ':' + config.plex.port + '/library/sections/' + libraryId + '/newest?X-Plex-Token=' + config.plex.token, function (error, response, body) {
                                 // See if Plex Media Server is online and how many people are watching.
                                 if (!error && response.statusCode == 200) {
-                                    var newestMovies = JSON.parse(parser.toJson(body))['MediaContainer'];
+                                    var newestMovies = JSON.parse(parser.toJson(body)).MediaContainer;
                                     res.render('nowPlayingAjax', {
                                         movies: newestMovies.Video
                                     });
@@ -88,20 +88,19 @@ module.exports = (function() {
                     'cloudy': 'N',
                     'partly-cloudy-day': 'H',
                     'partly-cloudy-night': 'I',
-                }
-                function getDirection(degrees){
-                    directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N'];
-                    return directions[Math.round(degrees/45)];
-                }
+                };
                 res.render('leftColumnTopAjax', {
                     currentSummary: currentForecast.currently.summary,
                     currentSummaryIcon: currentForecast.currently.icon,
                     currentTemp: Math.round(currentForecast.currently.temperature),
                     currentWindSpeed: Math.round(currentForecast.currently.windSpeed),
                     currentWindBearing: (Math.round(currentForecast.currently.windSpeed)) > 0 ? currentForecast.currently.windBearing : '',
-                    currentWindDirection: getDirection(currentForecast.currently.windBearing),
-                    minutelySummary: currentForecast.minutely ? currentForecast.minutely['summary'] : '',
-                    hourlySummary: currentForecast.hourly['summary'],
+                    currentWindDirection: (function(){
+                        directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N'];
+                        return directions[Math.round(currentForecast.currently.windBearing/45)];
+                    })(),
+                    minutelySummary: currentForecast.minutely ? currentForecast.minutely.summary : '',
+                    hourlySummary: currentForecast.hourly.summary,
                     sunriseTime: currentForecast.daily.data[0].sunriseTime * 1000,
                     sunsetTime: currentForecast.daily.data[0].sunsetTime * 1000,
                     rises: (currentForecast.daily.data[0].sunriseTime * 1000) > new Date().getTime() ? 'Rises' : 'Rose',
